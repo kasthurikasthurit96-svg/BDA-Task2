@@ -1,124 +1,865 @@
-# Task 2 – Data Analysis and Visualization
+# 📊 Superstore Sales Data Analysis and Visualization
 
-## 📌 Introduction
+## 1. Project Overview
 
-This project analyzes the **Sample Superstore dataset** using Python data analysis and visualization libraries.
+This project performs **Exploratory Data Analysis (EDA)** on the Sample Superstore dataset using Python.
 
-The main focus is on understanding business data through charts and statistical analysis.
+The analysis focuses on understanding:
 
-## 🎯 Aim
+* Sales performance
+* Profit performance
+* Product categories
+* Sales distribution
+* Profit distribution
+* Profit variation across categories
+* Discount and profit relationship
+* Correlation between numerical variables
+* Delivery duration
 
-To perform exploratory data analysis on the Sample Superstore dataset and create meaningful visualizations for sales, profit, discount, and numerical relationships.
+The project uses Pandas for data manipulation and Matplotlib and Seaborn for data visualization.
 
-## 📚 Libraries
+---
+
+# 2. Objectives
+
+The main objectives of this project are:
+
+1. To load and inspect the Superstore dataset.
+2. To understand the structure and statistical properties of the data.
+3. To convert date columns into the correct format.
+4. To calculate delivery duration.
+5. To identify product categories.
+6. To check missing values.
+7. To analyze sales by category.
+8. To understand the distribution of sales.
+9. To compare profit between categories.
+10. To compare sales between categories.
+11. To analyze profit distribution and outliers.
+12. To analyze profit variation across categories.
+13. To study the relationship between discount and profit.
+14. To analyze correlations between numerical variables.
+
+---
+
+# 3. Technologies Used
+
+* Python
+* Pandas
+* NumPy
+* Matplotlib
+* Seaborn
+* Google Colab
+
+---
+
+# 4. Dataset
+
+The project uses the **Sample Superstore dataset**.
+
+The dataset contains business information such as:
+
+* Order Date
+* Ship Date
+* Category
+* Sales
+* Profit
+* Discount
+* Product and order-related information
+
+The dataset is loaded using Pandas.
+
+---
+
+# 5. Data Loading
 
 ```python
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+df = pd.read_csv("/content/drive/MyDrive/samplesuperstore.csv")
 ```
 
-## 🔄 Data Preparation
+### Analysis
 
-The dataset is loaded using Pandas:
+The CSV dataset is loaded into a Pandas DataFrame named `df`.
+
+This is the first step of the analysis because all further preprocessing and visualization are performed using this DataFrame.
+
+---
+
+# 6. Initial Data Inspection
+
+## 6.1 Viewing the First Records
 
 ```python
-df = pd.read_csv("samplesuperstore.csv")
+df.head()
 ```
 
-The Order Date and Ship Date columns are converted to datetime format.
+### What is analyzed?
 
-A new column called `Delivery Days` is calculated:
+The first few rows of the dataset are displayed.
+
+### Why?
+
+This helps us understand:
+
+* What type of data is available.
+* What the column names are.
+* Whether the dataset has loaded correctly.
+* How individual records are structured.
+
+---
+
+## 6.2 Dataset Information
 
 ```python
-df['Delivery Days'] = (df['Ship Date'] - df['Order Date']).dt.days
+df.info()
 ```
 
-The dataset is also checked for missing values and unique categories.
+### What is analyzed?
 
-## 📊 Visualizations
+The structure of the dataset is analyzed.
 
-### Bar Plot
+It provides:
 
-Bar plots are created to compare:
+* Number of rows
+* Number of columns
+* Column names
+* Data types
+* Non-null values
 
-* Profit by Category
-* Sales by Category
+### Why?
 
-The purpose is to identify differences in sales and profit among categories.
+This helps identify incorrect data types and missing values before performing analysis.
 
-### Box Plot
+---
 
-Box plots are used to analyze profit distribution and variation across categories.
+## 6.3 Descriptive Statistics
 
-They help identify:
+```python
+df.describe()
+```
+
+### What is analyzed?
+
+Statistical information about numerical columns is generated.
+
+It includes:
+
+* Count
+* Mean
+* Standard deviation
+* Minimum
+* 25% percentile
+* Median
+* 75% percentile
+* Maximum
+
+### Why?
+
+This gives an overall understanding of the numerical data.
+
+---
+
+# 7. Data Preprocessing
+
+## 7.1 Converting Order Date
+
+```python
+df['Order Date'] = pd.to_datetime(df['Order Date'])
+```
+
+### Analysis
+
+The `Order Date` column is converted into datetime format.
+
+### Why?
+
+Proper datetime format allows date-based calculations and analysis.
+
+---
+
+## 7.2 Converting Ship Date
+
+```python
+df['Ship Date'] = pd.to_datetime(df['Ship Date'])
+```
+
+The `Ship Date` column is also converted into datetime format.
+
+---
+
+# 8. Delivery Days Analysis
+
+```python
+df['Delivery Days'] = (
+    df['Ship Date'] - df['Order Date']
+).dt.days
+```
+
+### What are we analyzing?
+
+We calculate how many days it took between the order date and ship date.
+
+### Formula
+
+**Delivery Days = Ship Date − Order Date**
+
+### Why is this useful?
+
+This creates a new feature called `Delivery Days`.
+
+It can be used to understand shipping/delivery duration.
+
+### Important
+
+The current code calculates the delivery days but does **not create a plot or detailed delivery analysis**. So the README should not claim that a delivery-days graph was created.
+
+---
+
+# 9. Category Analysis
+
+```python
+df['Category'].unique()
+```
+
+### What are we analyzing?
+
+The unique product categories present in the dataset are identified.
+
+### Why?
+
+This helps understand how products are grouped and provides the categories used in later visualizations.
+
+---
+
+# 10. Missing Value Analysis
+
+```python
+df.isnull().sum()
+```
+
+### What are we analyzing?
+
+The number of missing values in every column is checked.
+
+### Why?
+
+Missing data can affect statistical analysis and visualizations.
+
+Checking missing values is therefore an important data preprocessing step.
+
+---
+
+# 📊 11. Sales Analysis by Category
+
+```python
+category_sales = (
+    df.groupby('Category')['Sales'].sum()
+)
+```
+
+### What are we analyzing?
+
+The total sales generated by each product category are calculated.
+
+### How?
+
+The dataset is grouped using the `Category` column, and the `Sales` values are summed.
+
+### Why?
+
+This allows us to compare the total sales contribution of each category.
+
+---
+
+# 📊 12. Plot 1 – Sales by Category Bar Plot
+
+```python
+category_sales.plot(
+    kind='bar',
+    figsize=(8,5)
+)
+
+plt.title("Sales by Category")
+plt.ylabel("Total Sales")
+plt.show()
+```
+# OUTPUT OVERVIEW:
+<img width="924" height="715" alt="image" src="https://github.com/user-attachments/assets/f8846f4e-dd57-4495-aad9-35d606badcda" />
+
+
+## What analysis is performed?
+
+This plot analyzes **total sales performance across product categories**.
+
+### X-axis
+
+Product Category
+
+### Y-axis
+
+Total Sales
+
+### Why is a Bar Plot used?
+
+A bar plot is suitable for comparing numerical values across different categories.
+
+### What can we understand?
+
+We can identify:
+
+* Which category has higher total sales.
+* Which category has lower total sales.
+* The difference in sales performance between categories.
+
+### Business Use
+
+This analysis can help a business understand which product categories contribute more to overall sales.
+
+---
+
+# 📈 13. Plot 2 – Sales Distribution Histogram
+
+```python
+sns.histplot(
+    df['Sales'],
+    bins=30
+)
+
+plt.title("Sales Distribution")
+plt.show()
+```
+# OUTPUT OVERVIEW:
+<img width="897" height="593" alt="image" src="https://github.com/user-attachments/assets/565501b4-33d1-47f2-aec3-54b95704701f" />
+
+
+## What analysis is performed?
+
+This plot analyzes the **distribution of individual Sales values**.
+
+### X-axis
+
+Sales values
+
+### Y-axis
+
+Frequency of observations
+
+### Why is a Histogram used?
+
+A histogram is useful for understanding how numerical data is distributed across different value ranges.
+
+### What can we understand?
+
+We can identify:
+
+* Frequently occurring sales ranges.
+* Whether most sales values are concentrated in a particular range.
+* The overall shape of the sales distribution.
+* Possible extreme or unusual values.
+
+### Difference from Sales by Category
+
+**Sales by Category** → compares categories.
+
+**Sales Distribution** → studies how individual sales values are distributed.
+
+---
+
+# 📊 14. Plot 3 – Profit by Category
+
+```python
+sns.barplot(
+    data=df,
+    x="Category",
+    y="Profit"
+)
+
+plt.title("Profit by Category")
+plt.show()
+```
+
+# OUTPUT OVERVIEW:
+
+<img width="714" height="573" alt="image" src="https://github.com/user-attachments/assets/262e1e92-c00d-47c2-b44e-0f6d04aa4820" />
+
+
+## What analysis is performed?
+
+This plot analyzes **profit performance across product categories**.
+
+### X-axis
+
+Category
+
+### Y-axis
+
+Profit
+
+### Why is a Bar Plot used?
+
+A bar plot makes it easy to compare profit values between categories.
+
+### Main Question
+
+**Which category generates the highest profit?**
+
+### What can we understand?
+
+The plot helps identify categories with relatively higher or lower profit performance.
+
+### Business Use
+
+This analysis can help determine which categories are more profitable.
+
+---
+
+# 📊 15. Plot 4 – Sales Distribution by Category
+
+```python
+sns.barplot(
+    data=df,
+    x="Category",
+    y="Sales"
+)
+
+plt.title("Sales Distribution by Category")
+plt.show()
+```
+
+# OUTPUT OVERVIEW:
+
+<img width="731" height="574" alt="image" src="https://github.com/user-attachments/assets/080b41d8-84a0-40b0-b727-46d7e705fc42" />
+
+
+## What analysis is performed?
+
+This plot analyzes **sales values across product categories**.
+
+### X-axis
+
+Category
+
+### Y-axis
+
+Sales
+
+### Why?
+
+It provides a category-wise comparison of sales.
+
+### What can we understand?
+
+It helps determine which categories show stronger sales performance.
+
+### Important Note
+
+This uses `sns.barplot()`, which displays an aggregated value for each category rather than the raw individual sales records.
+
+---
+
+# 📦 16. Plot 5 – Profit Distribution Box Plot
+
+```python
+sns.boxplot(
+    data=df,
+    y="Profit"
+)
+
+plt.title("Profit Distribution")
+plt.show()
+```
+# OUTPUT OVERVIEW:
+
+<img width="748" height="527" alt="image" src="https://github.com/user-attachments/assets/c7dd499a-b1cf-4fbd-9ec0-dba8757ed8f0" />
+
+
+## What analysis is performed?
+
+This plot analyzes the **distribution and variation of Profit**.
+
+### What does a Box Plot show?
+
+A box plot helps identify:
 
 * Median
-* Data distribution
-* Outliers
+* Spread of data
 * Variation
+* Outliers
 
-### Scatter Plot
+### Why is it used?
 
-A scatter plot is created using:
+Profit values may vary significantly between orders.
+
+The box plot provides a compact way to understand this variation.
+
+### What can we understand?
+
+We can observe the central tendency, spread, and unusual profit values.
+
+---
+
+# 📦 17. Plot 6 – Profit Variation Across Categories
+
+```python
+sns.boxplot(
+    data=df,
+    x="Category",
+    y="Profit"
+)
+
+plt.title("Profit Variation Across Categories")
+plt.show()
+```
+
+# OUTPUT OVERVIEW:
+
+<img width="742" height="574" alt="image" src="https://github.com/user-attachments/assets/deb02bfc-b12c-4f64-abbe-132e26b4d7b2" />
+
+
+## What analysis is performed?
+
+This plot compares **profit distributions between different categories**.
+
+### X-axis
+
+Product Category
+
+### Y-axis
+
+Profit
+
+### Why is a Box Plot used?
+
+Unlike a simple bar chart, a box plot shows the distribution and variation within each category.
+
+### What can we analyze?
+
+For every category, we can compare:
+
+* Median profit
+* Spread of profit
+* Variation
+* Outliers
+* Differences in profit distribution
+
+### Business Use
+
+This helps identify categories where profit is more variable or where unusual profit values occur.
+
+---
+
+# 🎯 18. Discount Analysis
+
+```python
+df["Discount"].unique()
+```
+
+## What analysis is performed?
+
+The unique discount values present in the dataset are identified.
+
+### Why?
+
+This provides an understanding of the discount levels available in the dataset before studying the relationship between discount and profit.
+
+---
+
+# 🔵 19. Plot 7 – Discount vs Profit Scatter Plot
+
+```python
+sns.scatterplot(
+    data=df,
+    x="Discount",
+    y="Profit"
+)
+
+plt.title("Impact of Discount on Profit")
+plt.show()
+```
+
+# OUTPUT OVERVIEW:
+
+<img width="740" height="571" alt="image" src="https://github.com/user-attachments/assets/cc8252e1-dff1-400f-9bae-299fa0195fe1" />
+
+
+## What analysis is performed?
+
+This plot analyzes the **relationship between Discount and Profit**.
+
+### X-axis
+
+Discount
+
+### Y-axis
+
+Profit
+
+### Why is a Scatter Plot used?
+
+A scatter plot is suitable for studying the relationship between two numerical variables.
+
+Each point represents an observation.
+
+### Main Question
+
+**At what discount level does profit start decreasing?**
+
+### What can we analyze?
+
+We can look for:
+
+* Positive relationship
+* Negative relationship
+* Weak relationship
+* Clusters
+* Unusual observations
+* Changes in profit at different discount levels
+
+### Business Use
+
+This analysis can help understand whether higher discounts are associated with lower profitability.
+
+### Important
+
+The plot can show an association between discount and profit, but it does not by itself prove that discount is the only cause of changes in profit.
+
+---
+
+# 🔥 20. Numerical Variable Selection
+
+```python
+numeric_df = df.select_dtypes(
+    include="number"
+)
+```
+
+## What analysis is performed?
+
+Only numerical columns are selected from the dataset.
+
+### Why?
+
+Correlation analysis requires numerical variables.
+
+This step prepares the dataset for calculating the correlation matrix.
+
+---
+
+# 🔗 21. Correlation Analysis
+
+```python
+corr = numeric_df.corr()
+```
+
+## What is being analyzed?
+
+The correlation between numerical variables is calculated.
+
+### What is Correlation?
+
+Correlation measures the strength and direction of a **linear relationship** between two numerical variables.
+
+### Correlation Range
+
+| Correlation | Interpretation               |
+| ----------- | ---------------------------- |
+| +1          | Strong positive relationship |
+| 0           | No linear relationship       |
+| -1          | Strong negative relationship |
+
+### Why is it useful?
+
+It helps identify which numerical variables move together and which variables have weak relationships.
+
+---
+
+# 🔥 22. Plot 8 – Correlation Heatmap
+
+```python
+sns.heatmap(
+    corr,
+    annot=True
+)
+
+plt.title("Correlation Heatmap")
+plt.show()
+```
+
+# OUTPUT OVERVIEW:
+
+<img width="776" height="655" alt="image" src="https://github.com/user-attachments/assets/f41a28ad-61ed-4a40-86f3-c796b2876ee5" />
+
+
+## What analysis is performed?
+
+This plot visually represents the correlation matrix.
+
+### What does it show?
+
+The heatmap shows the correlation between numerical variables such as:
+
+* Sales
+* Profit
+* Discount
+* Quantity
+* Other numerical variables present in the dataset
+
+### What do the numbers mean?
+
+The values inside the heatmap represent correlation coefficients.
+
+### Interpretation
+
+**Positive value:**
+Both variables tend to increase together.
+
+**Negative value:**
+One variable tends to increase while the other decreases.
+
+**Value close to zero:**
+There is little linear relationship.
+
+### Why is a Heatmap used?
+
+A heatmap makes it easier to identify strong and weak relationships between many numerical variables at the same time.
+
+---
+
+# 📊 23. Complete Plot Analysis Summary
+
+| No. | Plot                               | Variables           | Analysis                                          |
+| --- | ---------------------------------- | ------------------- | ------------------------------------------------- |
+| 1   | Sales by Category                  | Category vs Sales   | Compares total sales between categories           |
+| 2   | Sales Distribution                 | Sales               | Studies distribution of sales values              |
+| 3   | Profit by Category                 | Category vs Profit  | Compares profit between categories                |
+| 4   | Sales Distribution by Category     | Category vs Sales   | Compares aggregated sales across categories       |
+| 5   | Profit Distribution                | Profit              | Studies median, spread and outliers               |
+| 6   | Profit Variation Across Categories | Category vs Profit  | Compares profit distributions                     |
+| 7   | Discount vs Profit                 | Discount vs Profit  | Studies relationship between discount and profit  |
+| 8   | Correlation Heatmap                | Numerical variables | Studies relationships between numerical variables |
+
+---
+
+# 🔬 24. Overall Analysis Performed
+
+The project performs analysis in five major areas:
+
+### 1. Sales Analysis
+
+Sales are analyzed by:
+
+* Category
+* Distribution
+
+This helps understand overall sales performance.
+
+### 2. Profit Analysis
+
+Profit is analyzed by:
+
+* Category
+* Distribution
+* Variation
+* Outliers
+
+This helps understand profitability.
+
+### 3. Discount Analysis
+
+Discount is compared with profit using a scatter plot.
+
+This helps investigate whether discount levels are associated with changes in profit.
+
+### 4. Distribution Analysis
+
+Histograms and box plots are used to understand:
+
+* Data spread
+* Central tendency
+* Variation
+* Outliers
+
+### 5. Correlation Analysis
+
+A correlation matrix and heatmap are used to understand relationships between numerical variables.
+
+---
+
+# 🔄 25. Complete Data Analysis Workflow
 
 ```text
-Discount → Profit
+                 Superstore Dataset
+                         ↓
+                  Load CSV File
+                         ↓
+                 Inspect the Data
+                         ↓
+              ┌──────────┴──────────┐
+              ↓                     ↓
+        Data Information      Descriptive Statistics
+              ↓
+       Date Preprocessing
+              ↓
+       Calculate Delivery Days
+              ↓
+        Category Analysis
+              ↓
+       Missing Value Checking
+              ↓
+     ┌────────┼────────┬─────────┐
+     ↓        ↓        ↓         ↓
+   Sales    Profit  Discount  Correlation
+     ↓        ↓        ↓         ↓
+   Bar      Bar    Scatter    Heatmap
+   Plot     Plot    Plot
+     ↓        ↓        ↓         ↓
+ Histogram  Box Plot  Relationship  Numerical
+            Analysis   Analysis    Relationships
+              ↓
+          Final Insights
 ```
 
-This visualization helps investigate whether discounts are associated with changes in profitability.
+---
 
-### Histogram
+# 📝 26. Conclusion
 
-A histogram is used to visualize the distribution of Sales values.
+The project successfully performs Exploratory Data Analysis on the Superstore dataset.
 
-### Correlation Heatmap
+The analysis covers **data inspection, preprocessing, sales analysis, profit analysis, discount analysis, distribution analysis, outlier analysis, and correlation analysis**.
 
-A correlation matrix is generated for numerical columns and visualized using a heatmap.
+Different visualization techniques are used according to the type of analysis:
 
-Correlation helps understand the relationship between numerical variables.
+* **Bar plots** are used for category comparisons.
+* **Histograms** are used for sales distribution.
+* **Box plots** are used for profit distribution, variation, and outlier analysis.
+* **Scatter plots** are used to study discount and profit relationships.
+* **Correlation heatmaps** are used to analyze relationships between numerical variables.
 
-## 📁 Project Structure
+These visualizations make it easier to understand the dataset and identify important patterns that may support business decision-making.
 
-```text
-Task2/
-│
-├── task2.py
-├── Task2.ipynb
-├── samplesuperstore.csv
-└── README.md
-```
+---
 
-## ▶️ Execution
+# 🚀 27. Future Enhancements
 
-Install dependencies:
+The project can be extended by adding:
 
-```bash
-pip install pandas numpy matplotlib seaborn
-```
+* Monthly sales trend analysis
+* Year-wise sales analysis
+* Region-wise analysis
+* Segment-wise analysis
+* Top 10 products by sales
+* Top 10 products by profit
+* Loss-making products
+* Delivery days analysis
+* Sales forecasting
+* Profit prediction
+* Interactive dashboard using Power BI or Streamlit
 
-Run the Python file:
+---
 
-```bash
-python task2.py
-```
+# 👩‍💻 Author
 
-Or open `Task2.ipynb` in Google Colab/Jupyter Notebook.
+**Kasthuri T**
 
-## 📌 Expected Output
+**Course:** Bachelor of Computer Applications (BCA)
 
-The project generates:
-
-* Sales by Category bar chart
-* Sales distribution histogram
-* Profit by Category bar chart
-* Sales by Category visualization
-* Profit distribution box plot
-* Profit variation by Category box plot
-* Discount vs Profit scatter plot
-* Correlation heatmap
-
-## ✅ Result
-
-The project successfully demonstrates exploratory data analysis and visualization techniques using the Sample Superstore dataset.
+**Project:** Superstore Sales Data Analysis and Visualization
